@@ -18,7 +18,7 @@ async function verificarConexion() {
     client.release();
 
   } catch (err) {
-    console.error('❌ Error al conectar a PostgreSQL:', err);
+    console.error('❌ Error al conectar a PostgreSQL:', err.message);
   }
 }
 

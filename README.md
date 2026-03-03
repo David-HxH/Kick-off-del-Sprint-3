@@ -1,3 +1,3 @@
-## E1-M7 Ejercicio
+## E2-M7 Ejercicio
 
-### Configuración de la Conexión a la Base de Datos 🐘
+### Lectura de Datos y Consultas Seguras

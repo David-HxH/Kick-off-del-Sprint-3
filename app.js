@@ -1,40 +1,41 @@
-// app.js
 require('dotenv/config');
-require('./config/db.js');
-const express = require('express');
-const yargs = require('yargs/yargs');
-const { hideBin } = require('yargs/helpers');
-const app = express();
+const pool = require('./config/db');
 
-// Middleware para parsear JSON
-app.use(express.json());
+// ==============================
+// Parte 1
+// ==============================
 
-// Definir el comando "crear" con un argumento obligatorio "titulo"
-const cli = yargs(hideBin(process.argv));
-
-cli.command({
-  command: 'crear',
-  describe: 'Crea una nueva tarea',
-  builder: {
-    titulo: {
-      describe: 'El título de la tarea',
-      demandOption: true,
-      type: 'string'
-    }
-  },
-  handler: (argv) => {
-    try {
-      console.log(`Tarea "${argv.titulo}" creada exitosamente.`);
-    } catch (error) {
-      console.error('Ha ocurrido un error inesperado.');
-    }
+async function obtenerUsuarios() {
+  try {
+    const resultado = await pool.query('SELECT * FROM usuarios');
+    console.log('Usuarios encontrados:');
+    console.log(resultado.rows);
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error.message);
   }
-});
+}
 
-cli.parse();
+// ==============================
+// Parte 2
+// ==============================
 
-// Escuchar en el puerto definido en el archivo .env
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor escuchando en el puerto ${PORT}`);
-});
+async function obtenerUsuarioPorEmail(email) {
+  try {
+    const consulta = 'SELECT * FROM usuarios WHERE email = $1';
+    const valores = [email];
+
+    const resultado = await pool.query(consulta, valores);
+
+    console.log(`Resultado búsqueda para "${email}":`);
+    console.log(resultado.rows);
+  } catch (error) {
+    console.error('Error al buscar usuario:', error.message);
+  }
+}
+
+(async () => {
+  await obtenerUsuarios();
+  await obtenerUsuarioPorEmail('ana.garcia@example.com');
+  await obtenerUsuarioPorEmail('noexiste@example.com');
+  await pool.end(); // cerrar conexión
+})();
