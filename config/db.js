@@ -1,25 +1,18 @@
-const { Pool } = require('pg');
+require('dotenv/config');
+const { Sequelize } = require('sequelize');
 
-const dbConfig = {
-  connectionString: process.env.DATABASE_URL,
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-};
-
-const pool = new Pool(dbConfig);
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+  logging: false // evita que imprima todas las consultas
+});
 
 async function verificarConexion() {
   try {
-    const client = await pool.connect();
-    console.log('✅ Conexión a PostgreSQL exitosa');
-
-    // Liberar cliente
-    client.release();
-
-  } catch (err) {
-    console.error('❌ Error al conectar a PostgreSQL:', err.message);
+    await sequelize.authenticate();
+    console.log('✅ Conexión a PostgreSQL con Sequelize exitosa');
+  } catch (error) {
+    console.error('❌ Error al conectar a PostgreSQL:', error.message);
   }
 }
 
-module.exports = { pool, verificarConexion };
+module.exports = { sequelize, verificarConexion };

@@ -1,3 +1,3 @@
-## E4-M7 Ejercicio
+## E5-M7 Ejercicio
 
-### Transacción de Transferencia Bancaria Segura
+### CRUD de Productos con Sequelize
