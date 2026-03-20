@@ -1,4 +1,4 @@
-const { Tablero } = require("../models");
+const { Tablero, Lista } = require("../models");
 
 /* =========================
    GET tableros del usuario
@@ -24,15 +24,32 @@ exports.createTablero = async (req, res) => {
   const { titulo } = req.body;
 
   try {
-    const nuevoTablero = await Tablero.create({
+    const userId = req.usuario.id;
+
+    // 1️⃣ Crear tablero
+    const tablero = await Tablero.create({
       titulo,
-      userId: req.usuario.id
+      userId
     });
 
-    res.status(201).json(nuevoTablero);
+    // 2️⃣ Listas base
+    const listasBase = ["Pendiente", "En progreso", "Hecho"];
+
+    const listas = await Lista.bulkCreate(
+      listasBase.map(nombre => ({
+        titulo: nombre,
+        tableroId: tablero.id
+      }))
+    );
+
+    // 3️⃣ Respuesta más completa (opcional pero pro)
+    res.status(201).json({
+      tablero,
+      listas
+    });
 
   } catch (error) {
-    console.error(error);
+    console.error("ERROR CREANDO TABLERO:", error);
     res.status(500).json({ error: "Error creando tablero" });
   }
 };

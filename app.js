@@ -5,6 +5,7 @@ const express = require("express");
 const path = require("path");
 const hbs = require("hbs");
 const { Tablero, Lista, Tarjeta } = require("./models");
+const verificarToken = require("./middleware/auth.middleware");
 
 const app = express();
 const PORT = 3000;
@@ -42,17 +43,57 @@ app.get("/dashboard", async (req, res) => {
   try {
     const userId = 1;
 
-    const tablero = await Tablero.findOne({
-      where: { userId },
-      include: {
-        model: Lista,
-        as: "listas",
+    let tablero = await Tablero.findOne({
+        where: { userId },
         include: {
-          model: Tarjeta,
-          as: "tarjetas"
-        }
-      }
+            model: Lista,
+            as: "listas",
+            include: {
+            model: Tarjeta,
+            as: "tarjetas"
+            }
+        },
+        order: [
+            [{ model: Lista, as: "listas" }, "orden", "ASC"]
+        ]
     });
+
+    // SI NO EXISTE → CREAR AUTOMÁTICAMENTE
+    if (!tablero) {
+
+      // 1️⃣ Crear tablero
+      const nuevoTablero = await Tablero.create({
+        titulo: "Mi tablero",
+        userId
+      });
+
+      // 2️⃣ Crear listas base
+      const listasBase = ["Pendiente", "En progreso", "Hecho"];
+
+      await Lista.bulkCreate(
+        listasBase.map((nombre, index) => ({
+          titulo: nombre,
+          tableroId: nuevoTablero.id,
+          orden: index
+        }))
+      );
+
+      // 3️⃣ Volver a consultar con relaciones
+      tablero = await Tablero.findOne({
+        where: { id: nuevoTablero.id },
+        include: {
+          model: Lista,
+          as: "listas",
+          include: {
+            model: Tarjeta,
+            as: "tarjetas"
+          }
+        },
+          order: [
+            [{ model: Lista, as: "listas" }, "orden", "ASC"]
+          ]
+        });
+    }
 
     // 🔁 TRANSFORMACIÓN (clave)
     const board = {

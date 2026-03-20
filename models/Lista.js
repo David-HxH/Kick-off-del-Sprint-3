@@ -10,6 +10,11 @@ const Lista = sequelize.define("Lista", {
   titulo: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  orden: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
   tableName: "listas",
