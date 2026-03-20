@@ -5,28 +5,22 @@ const express = require("express");
 const path = require("path");
 const hbs = require("hbs");
 const { Tablero, Lista, Tarjeta } = require("./models");
-const verificarToken = require("./middleware/auth.middleware");
+const verificarToken = require("./middleware/auth.middleware"); // implementar a futuro
 
 const app = express();
 const PORT = 3000;
 
-/* =========================
-   🧱 MIDDLEWARE GLOBAL
-========================= */
+/* MIDDLEWARE GLOBAL */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-/* =========================
-   🎨 HANDLEBARS
-========================= */
+/* HANDLEBARS */
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 hbs.registerPartials(path.join(__dirname, "views"));
 
-/* =========================
-   📄 RUTAS DE VISTAS
-========================= */
+/* 📄 RUTAS DE VISTAS */
 app.get("/", (req, res) => {
   res.render("home", { title: "Inicio" });
 });
@@ -61,13 +55,13 @@ app.get("/dashboard", async (req, res) => {
     // SI NO EXISTE → CREAR AUTOMÁTICAMENTE
     if (!tablero) {
 
-      // 1️⃣ Crear tablero
+      // Crear tablero
       const nuevoTablero = await Tablero.create({
         titulo: "Mi tablero",
         userId
       });
 
-      // 2️⃣ Crear listas base
+      // Crear listas base
       const listasBase = ["Pendiente", "En progreso", "Hecho"];
 
       await Lista.bulkCreate(
@@ -78,7 +72,7 @@ app.get("/dashboard", async (req, res) => {
         }))
       );
 
-      // 3️⃣ Volver a consultar con relaciones
+      // Volver a consultar con relaciones
       tablero = await Tablero.findOne({
         where: { id: nuevoTablero.id },
         include: {
@@ -95,7 +89,7 @@ app.get("/dashboard", async (req, res) => {
         });
     }
 
-    // 🔁 TRANSFORMACIÓN (clave)
+    // TRANSFORMACIÓN (clave)
     const board = {
       name: tablero.titulo,
       lists: tablero.listas.map(lista => ({
@@ -119,18 +113,14 @@ app.get("/dashboard", async (req, res) => {
   }
 });
 
-/* =========================
-   🔌 API (placeholder)
-========================= */
+/*🔌 API (placeholder) */
 app.use("/api", require("./routes/api")); 
 // ⚠️ este archivo lo crearemos ahora
 
 verificarConexion();
 sequelize.sync({ alter: true });
 
-/* =========================
-   ▶️ SERVER
-========================= */
+/* SERVER */
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });

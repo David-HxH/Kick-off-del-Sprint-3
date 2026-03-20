@@ -1,8 +1,6 @@
 const { Tarjeta, Lista, Tablero } = require("../models");
 
-/* =========================
-   CREAR tarjeta
-========================= */
+/* CREAR tarjeta */
 exports.createTarjeta = async (req, res) => {
   const { titulo, descripcion } = req.body;
   const { listaId } = req.params;
@@ -38,9 +36,7 @@ if (lista.tablero.userId !== req.usuario.id) {
   }
 };
 
-/* =========================
-   EDITAR tarjeta
-========================= */
+/* EDITAR tarjeta */
 exports.updateTarjeta = async (req, res) => {
   const { id } = req.params;
   const { titulo, descripcion } = req.body;
@@ -74,9 +70,7 @@ exports.updateTarjeta = async (req, res) => {
   }
 };
 
-/* =========================
-   ELIMINAR tarjeta
-========================= */
+/* ELIMINAR tarjeta */
 exports.deleteTarjeta = async (req, res) => {
   const { id } = req.params;
 

@@ -1,8 +1,6 @@
 const { Tablero, Lista } = require("../models");
 
-/* =========================
-   GET tableros del usuario
-========================= */
+/* GET tableros del usuario */
 exports.getTableros = async (req, res) => {
   try {
     const tableros = await Tablero.findAll({
@@ -17,22 +15,20 @@ exports.getTableros = async (req, res) => {
   }
 };
 
-/* =========================
-   CREAR tablero
-========================= */
+/* CREAR tablero */
 exports.createTablero = async (req, res) => {
   const { titulo } = req.body;
 
   try {
     const userId = req.usuario.id;
 
-    // 1️⃣ Crear tablero
+    // Crear tablero
     const tablero = await Tablero.create({
       titulo,
       userId
     });
 
-    // 2️⃣ Listas base
+    // Listas base
     const listasBase = ["Pendiente", "En progreso", "Hecho"];
 
     const listas = await Lista.bulkCreate(
@@ -42,7 +38,6 @@ exports.createTablero = async (req, res) => {
       }))
     );
 
-    // 3️⃣ Respuesta más completa (opcional pero pro)
     res.status(201).json({
       tablero,
       listas

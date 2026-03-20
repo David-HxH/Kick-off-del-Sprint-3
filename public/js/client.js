@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // 🔄 recargar para ver cambios
+      // recargar para ver cambios
       location.reload();
 
     } catch (error) {

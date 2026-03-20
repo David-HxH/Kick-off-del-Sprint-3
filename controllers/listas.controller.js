@@ -1,8 +1,6 @@
 const { Lista, Tablero } = require("../models");
 
-/* =========================
-   CREAR lista
-========================= */
+/* CREAR lista */
 exports.createLista = async (req, res) => {
   const { titulo } = req.body;
   const { tableroId } = req.params;
@@ -33,9 +31,7 @@ exports.createLista = async (req, res) => {
   }
 };
 
-/* =========================
-   EDITAR lista
-========================= */
+/* EDITAR lista */
 exports.updateLista = async (req, res) => {
   const { id } = req.params;
   const { titulo } = req.body;
@@ -63,9 +59,7 @@ exports.updateLista = async (req, res) => {
   }
 };
 
-/* =========================
-   ELIMINAR lista
-========================= */
+/* ELIMINAR */
 exports.deleteLista = async (req, res) => {
   const { id } = req.params;
 

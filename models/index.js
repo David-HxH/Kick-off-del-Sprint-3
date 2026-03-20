@@ -3,9 +3,7 @@ const Tablero = require("./Tablero");
 const Lista = require("./Lista");
 const Tarjeta = require("./Tarjeta");
 
-// =========================
 // RELACIONES
-// =========================
 
 // User → Tableros
 User.hasMany(Tablero, {
