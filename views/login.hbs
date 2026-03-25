@@ -1,6 +1,18 @@
 <h1>Login</h1>
 <p class="firtsP">Formulario de inicio de sesión (próximamente).</p>
 
+{{#if error}}
+  <div class="alert alert-danger firtsP">
+    {{#if (eq error "debes_iniciar_sesion")}}
+      Debes iniciar sesión para acceder al dashboard.
+    {{/if}}
+
+    {{#if (eq error "sesion_expirada")}}
+      Tu sesión ha expirado. Inicia sesión nuevamente.
+    {{/if}}
+  </div>
+{{/if}}
+
 <form id="login-form">
   <input type="email" name="email" placeholder="Email" required />
   <input type="password" name="password" placeholder="Password" required />

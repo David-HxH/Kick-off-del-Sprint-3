@@ -12,8 +12,6 @@ const PORT = 3000;
 
 app.use(cookieParser());
 
-
-
 /* MIDDLEWARE GLOBAL */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,6 +21,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 hbs.registerPartials(path.join(__dirname, "views"));
+hbs.registerHelper("eq", (a, b) => a === b);
 
 /* 📄 RUTAS DE VISTAS */
 app.get("/", (req, res) => {
@@ -34,7 +33,12 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("login", { title: "Login" });
+  const error = req.query.error;
+
+  res.render("login", {
+    title: "Login",
+    error
+  });
 });
 
 app.get("/dashboard", verificarUsuario, async (req, res) => {
